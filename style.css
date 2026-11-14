@@ -77,3 +77,21 @@ h1, h2, h3 {
 		box-shadow:4px 4px 10px rgba(0,0,0,0.8);
 	}
 }
+
+/* Linked views: one labeled panel per view */
+.view-panel {
+  max-width: 670px;
+  margin: 0 auto 40px;
+  padding: 0 10px;
+}
+
+.view-panel h2 {
+  margin: 0 0 8px;
+  font-size: 1.1rem;
+}
+
+.view-panel .view {
+  min-height: 120px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
