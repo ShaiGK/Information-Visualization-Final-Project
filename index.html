@@ -37,9 +37,11 @@
     
     <h1>Motivation</h1>
     
-    <p><em>Summary of user needs and motivating questions.</em></p>
-    
-    <p><em>Expectation: There is a clear focus, and a developed explanation of the problem, and a reasonable response is proposed.</em></p>
+    <p>Browser fingerprinting is a way for a website to recognize a visitor without cookies, by reading small differences in the visitor's browser and hardware. WebGPU, the successor to WebGL, lets a page run computations directly on a visitor's graphics card, so it exposes more about the hardware than older web standards did. That is bad for privacy, but it can also help security teams spot suspicious or fraudulent devices.</p>
+
+    <p>Our data comes from Sam's research with Professor Solomos. Sam ran a set of WebGPU tests on 76 device and browser configurations on BrowserStack, covering Windows and macOS virtual machines and real iPhones, iPads, Pixels and Galaxy phones. Every configuration was visited repeatedly (20 times on desktop and 5 on mobile), which gives 800 visits and 4,000 test runs. The lab now has to decide which of these tests deserve more research. Professor Solomos told us what he looks for. First, a test should be repeatable, so that the same device gives the same answer when it runs the test again. Second, the answers should differ across operating systems, browsers and GPUs, so that the test can tell devices apart. A test that changes between runs cannot identify anything, and a stable test that gives every device the same answer tells us nothing.</p>
+
+    <p>Answering this from a table of results is slow, because the answer depends on two measures at once and on how the timing results spread within and between devices. Our users are researchers who study browser security and privacy, and they also need to show their conclusions to reviewers. We respond with three linked views. A scorecard places each test by how many distinct results it gives and how often it is stable, which shows at a glance which tests are worth writing up. A distribution plot of GPU timings and a set of box plots by operating system and browser let a researcher check which devices a timing test can separate. Selecting devices in one view highlights them in the others, so a researcher can move from the overall question to individual devices without losing context.</p>
 
     
     <h1>Visualization</h1>
@@ -74,6 +76,20 @@
   <!-- Your writeup goes here -->
   <div class = "content-column">
 
+    <h1>Demo Video</h1>
+
+    <p><em>Embedded MP4 demo video using the HTML5 &lt;video&gt; tag. Put your video file in the <code>files</code> folder and update the file name below.</em></p>
+
+    <video controls width="100%">
+      <source src="files/demo.mp4" type="video/mp4">
+      <p>Your browser doesn't support HTML5 video. Here is
+       a <a href="files/demo.mp4">link to the video</a> instead.</p>
+    </video>
+
+    <h1>Visualization explanation</h1>
+
+    <p><em>Final visualization screenshots (PNG images), design justifications, UI walk-through, and linked presentation slides.</em></p>
+
     <h1>Data Analysis</h1>
     <p><em>Summary of data, data types, and data preprocessing.</em></p>
 
@@ -81,9 +97,24 @@
 
     <h1>Task Analysis</h1>
 
-    <p><em>Summary of task table.</em></p>
+    <p>We built the task analysis from our interview and from the questions we sent to Professor Solomos, the domain expert for this data. The interview was short and spent mostly on background, so we based the tasks on the professor's answers about what makes a fingerprinting test worth writing up. The table translates each domain task into the vocabulary of Munzner's task taxonomy: the high-level analyze goal, the mid-level search task and the low-level query. The tasks are listed in the order our users care about them. Stability comes first because the professor told us that repeatable patterns are what he looks for, and a test whose result changes between runs cannot identify a device. Comparing platforms comes second, since he named browsers, the same hardware across operating systems, and devices within one GPU family as the comparisons that separate a real signal from a duplicated pattern.</p>
 
-    <p><em>Expectation: Clearly describes domain tasks, processes, goals and abstract tasks for domain problems.</em></p>
+    <table class="task-table">
+      <thead>
+        <tr><th>Rank</th><th>Domain task</th><th>Analyze</th><th>Search</th><th>Query</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td>Check that a test is stable by seeing whether the same device gives the same result across repeated runs</td><td>Discover</td><td>Lookup</td><td>Compare</td></tr>
+        <tr><td>2</td><td>Compare test results across operating systems, browsers, GPU vendors and device types to see which platform differences a test picks up</td><td>Discover</td><td>Browse</td><td>Compare</td></tr>
+        <tr><td>3</td><td>Decide whether a WebGPU test is worth writing up by seeing how well its results split devices into distinct groups</td><td>Discover</td><td>Browse</td><td>Summarize</td></tr>
+        <tr><td>4</td><td>Isolate a single test to see how much it adds to telling devices apart compared to the other tests</td><td>Discover</td><td>Locate</td><td>Compare</td></tr>
+        <tr><td>5</td><td>Show reviewers that WebGPU tests make fingerprinting easier, as in a thesis or paper proposal</td><td>Present</td><td>Lookup</td><td>Summarize</td></tr>
+      </tbody>
+    </table>
+
+    <p>Four of the five tasks are discover tasks. A security researcher is exploring the test results to find out which tests split devices apart, which platform differences they pick up and whether they stay stable across runs, and none of those answers are known ahead of time. For that reason the visualization is built primarily for discovery. Presenting still matters, because the end goal is to convince reviewers that these tests deserve a paper, but that can only happen once the researcher has found something worth showing.</p>
+
+    <p>Each view supports specific tasks. The scorecard puts stability on one axis and the number of distinct results on the other, so it serves tasks 1 and 3 together and gives a summary that can be shown to reviewers (task 5). The timing distribution plot shows each configuration's spread, where a steep line means a stable device (task 1) and lines far apart mean devices a test can tell apart (task 2). The box plots compare spread and outliers across operating systems and browsers (tasks 1 and 2). Because the scorecard places every test against the others, it also lets a researcher single out the strongest and weakest tests (task 4).</p>
 
     <h1>Design Process</h1>
     
@@ -92,6 +123,13 @@
     <p><em>Expectation: Evidence of iterative improvement.
     Logical discussion of design choices grounded in theory from course.
     Discusses feedback from usability testing.</em></p>
+
+
+    <h1>Conclusion</h1>
+
+    <p><em>Short summary of work completed and areas for improvement/future-work.</em></p>
+
+    <p><em>Expectation: Meaningfully wraps up project and has good future directions.</em></p>
 
 
     <h1>Acknowledgments</h1>
