@@ -123,10 +123,15 @@ def build():
         nav = json.loads(r["navigator_info"])
         gpu_arch = r["gpu_architecture"] or "(not reported)"
 
+        # run_id keeps the database name so ids stay unique across the two files.
         run_id = f"{source}:{r['id']}"
+        # Two phones (s26ultra_chrome, iphone17promax_safari) were run during the desktop
+        # sweep. Label every run by the kind of device it is, not by which file it came from.
+        sweep = "desktop_sweep" if device_type == "Desktop" else "mobile_sweep"
         rows.append({
             "run_id": run_id,
-            "source": source,
+            "source": sweep,
+            "source_db": source,
             "config": config,
             "visit_num": visit_num,
             "visit_id": r["visit_id"],
