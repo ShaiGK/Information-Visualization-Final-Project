@@ -32,10 +32,11 @@ Each **config** object:
 | Field | Meaning | Used by |
 |---|---|---|
 | `config` | Unique id, e.g. `s26ultra_chrome` | All views (the key that selections share) |
+| `sweep` | `desktop` or `mobile` | Tooltips |
 | `device`, `os`, `browser`, `gpu` | Labels. `os` is the color encoding in every view | Tooltips, color, box plot groups |
 | `visits` | Number of visits (20 desktop, 5 mobile) | Tooltips |
-| `visit_ms` | Each visit's median GPU dispatch time in ms | Box plots (view C) |
-| `q` | 101 quantiles (0%, 1%, …, 100%) of every GPU dispatch timing sample for this configuration, in ms | CDF (view B) |
+| `visit_ms` | Each visit's median GPU dispatch time in ms (warm-up run dropped) | Box plots (view C) |
+| `q` | 101 quantiles (0%, 1%, …, 100%) of every GPU dispatch timing sample for this configuration, in ms (warm-up run dropped) | CDF (view B) |
 | `n_samples` | How many timing samples `q` summarizes | Tooltips |
 | `results` | For each test, the result id of every visit | Scorecard (view A), so it can be recomputed for any selection |
 
@@ -43,6 +44,7 @@ Each **test** object has `test` (id), `label` (display name), `baseline` (true f
 
 ## Known data issues
 
-* The first of the five runs in a visit is a warm-up and is usually the slowest. `q` and `visit_ms` still include it, and dropping it is a Sprint 2 task (D2 in the to-do list).
-* Two mobile configurations (`s26ultra_chrome` and `iphone17promax_safari`) were run during the desktop sweep. They will be relabeled in Sprint 2 (D2).
+* The first of the five runs in a visit is a warm-up and is slower on average (about 9% on desktop and 40% on tablets). Since Sprint 2 (D2), `build_data.py` drops it (`WARMUP_RUNS = 1`), so `q` and `visit_ms` are built from runs 2 to 5 only (16,000 timing samples in all).
+* Two mobile configurations (`s26ultra_chrome` and `iphone17promax_safari`) were run during the desktop sweep. Since Sprint 2 (D2), `clean_data.py` labels every run's `source` by device type, so they count as `mobile_sweep`. The database a run came from is kept in `source_db`, and each config in `views.json` has a `sweep` field (`desktop` or `mobile`).
+* 102 of the 20,000 timing samples (on iOS Safari and macOS Firefox) are 0 ms because of timer rounding. They are kept, and the CDF's log scale clamps them to its left edge.
 * The user agent fields are unreliable (iPads say they are Macs, iOS 26 says iOS 18), so device and OS labels come from the BrowserStack configuration, not the user agent.
