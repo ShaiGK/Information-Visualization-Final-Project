@@ -316,7 +316,8 @@
         if (event.key === "Escape" && chart.selected()) chart.clear();
       });
 
-      // Exposed so the shared selection event (I1) can link this view to the others.
+      // Link this view to the others through the shared selection event (I1).
+      shared.link("cdf", chart);
       window.cdfChart = chart;
     }).catch(err => {
       console.error("CDF could not load data/views.json", err);
