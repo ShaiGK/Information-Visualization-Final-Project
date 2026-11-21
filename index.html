@@ -53,6 +53,9 @@
   <!-- Visualization: three linked views -->
   <div class="vis-holder">
 
+    <!-- Shared operating system legend for all three views (js/shared.js draws into #os-legend) -->
+    <div id="os-legend" class="os-legend"></div>
+
     <!-- View A: test scorecard (js/scorecard.js draws into #scorecard) -->
     <section class="view-panel" aria-labelledby="scorecard-title">
       <h2 id="scorecard-title">A. Test scorecard</h2>
@@ -120,12 +123,16 @@
     <p>Each view supports specific tasks. The scorecard puts stability on one axis and the number of distinct results on the other, so it serves tasks 1 and 3 together and gives a summary that can be shown to reviewers (task 5). The timing distribution plot shows each configuration's spread, where a steep line means a stable device (task 1) and lines far apart mean devices a test can tell apart (task 2). The box plots compare spread and outliers across operating systems and browsers (tasks 1 and 2). Because the scorecard places every test against the others, it also lets a researcher single out the strongest and weakest tests (task 4).</p>
 
     <h1>Design Process</h1>
-    
-    <p><em>Sketches and design choices to justify final visualization.</em></p>
 
-    <p><em>Expectation: Evidence of iterative improvement.
-    Logical discussion of design choices grounded in theory from course.
-    Discusses feedback from usability testing.</em></p>
+    <p><em>Draft (Sprint 2). Sketches and usability-testing feedback will be added in Sprint 3.</em></p>
+
+    <p>Our design starts from the task analysis. Every task asks a researcher to compare: stability against how well a test splits devices apart, or one platform's timings against another's. Following the expressiveness and effectiveness principles, we put the quantities being compared on position along a common scale, the most effective channel for quantitative data. The scorecard places each test by its two measures, and both timing views put GPU time on the same kind of axis. We use color hue for only one categorical attribute, operating system, and the same colorblind-safe Okabe-Ito palette in every view, so a color means the same thing everywhere and a reader learns it once from the shared legend above the views.</p>
+
+    <p>The design changed as the real data came in. In Sprint 1 the views were empty panels around a shared module for color and data loading, so that every view would look the same from the start. Once we plotted real timings we saw that they run from under 1 ms on Apple GPUs to over 150 ms on the Windows virtual machines, which use a software renderer. On a linear axis every group except Windows would collapse into a line at the bottom, so both timing views use a log scale. The data also showed that the first run of each visit is a slower warm-up. We drop it, because it would have made every device look less stable than it is. On the scorecard, the two baselines now have a different marker so that they do not read as tests we are evaluating.</p>
+
+    <p>We use two timing views because they answer different questions. The CDF shows every configuration, but 76 overlapping lines make it hard to compare whole groups. The box plots aggregate each operating system and browser into one box, which reduces clutter and makes the comparison direct: boxes that do not overlap mean the timing test can tell those groups apart, and a short box means stable timings. We chose box plots over violin plots because some groups are small (macOS Firefox has only two devices), which is too little data for a reliable density estimate. We compute the whiskers on the log scale so that they match what the eye sees on the axis.</p>
+
+    <p>The interaction follows Shneiderman's mantra: overview first, zoom and filter, then details on demand. Each view gives an overview, and tooltips give exact values. Selecting devices in any view (by brushing the CDF, clicking a box, or clicking an operating system in the legend) highlights the same devices in the other views through one shared selection event, so the views stay linked without depending on each other. Every view has a fixed size, so nothing moves while the user interacts. Next we will test the page with researchers from Professor Solomos's lab and revise it based on what they find hard to read.</p>
 
 
     <h1>Conclusion</h1>
@@ -142,6 +149,8 @@
     <ul>
       <li><a href="https://d3js.org/">D3: Data-Driven Documents</a> by Mike Bostock.</li>
       <li>Operating system colors use the colorblind-safe palette from Okabe and Ito, <a href="https://jfly.uni-koeln.de/color/">Color Universal Design</a>.</li>
+      <li>The box plot whiskers follow Tukey's 1.5 IQR rule (J. W. Tukey, <em>Exploratory Data Analysis</em>, 1977).</li>
+      <li>Spencer used Claude (Anthropic) to help write the box plots (<code>js/boxplots.js</code>), the shared legend and selection event (<code>js/shared.js</code>) and the Design Process draft.</li>
     </ul>
     
   </div>
